@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// Deny-all for the Storage client SDK / REST-with-Firebase-Auth access path.
+// Property image uploads/deletes go through Server Actions using
+// firebase-admin (which bypasses these rules), and uploaded images are
+// served via object ACLs (file.makePublic()) — a separate access path these
+// rules do not govern. Do not loosen these rules to "fix" image loading;
+// that is not what controls it. See src/lib/firebase/properties.ts.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

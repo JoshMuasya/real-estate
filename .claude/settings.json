@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command \"\\(Get-Process -Id 19732 -ErrorAction SilentlyContinue\\).StartTime\")",
+      "Bash(powershell -Command \"\\(Get-Item '.env'\\).LastWriteTime\")",
+      "Bash(powershell -Command \"\\(Get-Item 'c:\\\\Users\\\\codep\\\\OneDrive\\\\Desktop\\\\Projects\\\\Digimatic Monetisation\\\\Real Estate\\\\real-estate\\\\.env'\\).LastWriteTime\")",
+      "Bash(taskkill //F //PID 13492)",
+      "Bash(netstat -ano)",
+      "Bash(curl -s -o /dev/null -w \"/ -> %{http_code}\\\\n\" \"http://localhost:3000/\")",
+      "Bash(curl -s -o /dev/null -w \"/buy -> %{http_code}\\\\n\" \"http://localhost:3000/buy\")",
+      "Bash(curl -s -o /dev/null -w \"/properties -> %{http_code}\\\\n\" \"http://localhost:3000/properties\")",
+      "Bash(curl -s -o /dev/null -w \"/properties?filters -> %{http_code}\\\\n\" \"http://localhost:3000/properties?location=Nairobi&type=Apartment&transaction=rent&maxPrice=50000000&beds=2\")",
+      "Bash(curl -s \"http://localhost:3000/properties\")",
+      "Bash(curl -s \"http://localhost:3000/properties?location=Nonexistentville\")",
+      "Bash(curl -s \"http://localhost:3000/properties?location=Nairobi&type=Apartment&transaction=rent&maxPrice=50000000&beds=2\")",
+      "Bash(grep -oE '\"aria-label\":\"Location\",\"value\":\"[^\"]*\"|value=\\\\\\\\\"Nairobi\\\\\\\\\"')",
+      "Bash(curl -s \"http://localhost:3000/properties?location=Nairobi&type=Apartment&transaction=rent&maxPrice=50000000&beds=2\" -o /tmp_props.html)",
+      "Bash(curl -s \"http://localhost:3000/\")",
+      "Bash(grep -o 'name=\"transaction\".\\\\{0,150\\\\}')",
+      "Bash(curl -s \"http://localhost:3000/properties\" -o /tmp/props_full.html)",
+      "Read(//tmp/**)",
+      "Bash(grep -oE \"KES [0-9,]+\" /tmp/props_full.html | sort -u | head -20)",
+      "Bash(curl -s \"http://localhost:3000/properties?maxPrice=50000000\" -o /tmp/props_50m.html)",
+      "Bash(curl -s \"http://localhost:3000/properties?location=&type=&transaction=sale&maxPrice=50000000&beds=\" -o /tmp/props_sim.html)",
+      "Bash(node -e \"console.log\\(require.resolve\\('playwright'\\)\\)\")",
+      "Bash(node -e \"console.log\\(require.resolve\\('puppeteer'\\)\\)\")",
+      "Bash(curl -s \"http://localhost:3000/properties?maxPrice=50000000\")",
+      "Bash(grep -o 'aria-label=\\\\\\\\\"Maximum price\\\\\\\\\"[^\\)]\\\\{0,400\\\\}')",
+      "Bash(python3 -c ' *)",
+      "Bash(curl -s \"http://localhost:3000/contact\")",
+      "Bash(curl -s \"http://localhost:3000/sell\")",
+      "Bash(grep -o '/properties/[a-zA-Z0-9-]\\\\{3,60\\\\}')",
+      "Bash(curl -s \"http://localhost:3000/properties\" -o /tmp/plist.html)",
+      "Bash(grep -oE '\\\\\\\\\"slug\\\\\\\\\":\\\\\\\\\"[^\"]{2,60}\\\\\\\\\"' /tmp/plist.html | head -5 *)",
+      "Bash(grep -oE 'href=.{0,40}' /tmp/plist.html | grep -i propert | head -10)"
+    ]
+  }
+}
