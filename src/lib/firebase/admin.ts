@@ -1,6 +1,5 @@
 import "server-only";
 import { cert, getApps, initializeApp, type App } from "firebase-admin/app";
-import { getAuth } from "firebase-admin/auth";
 import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
 
@@ -19,6 +18,11 @@ function getAdminApp(): App {
 }
 
 export function adminAuth() {
+    // Required lazily: firebase-admin/auth pulls in jwks-rsa -> jose (ESM-only),
+    // which throws ERR_REQUIRE_ESM on Node runtimes older than ~22.12. Deferring the
+    // require to here means routes that only touch Firestore (e.g. the public
+    // properties listing) never load that chain at all.
+    const { getAuth } = require("firebase-admin/auth") as typeof import("firebase-admin/auth");
     return getAuth(getAdminApp());
 }
 
