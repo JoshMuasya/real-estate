@@ -28,7 +28,9 @@ export function adminDb() {
         // Firestore only allows settings() once, before any other call on the instance.
         // The underlying client can outlive this module (e.g. dev server hot-reloads),
         // so a second call here is expected in some cases and safe to ignore.
-        db.settings({ ignoreUndefinedProperties: true });
+        // preferRest avoids gRPC, which does not reliably survive Vercel's serverless
+        // function runtime (works in `next dev` and at build time, fails at request time).
+        db.settings({ ignoreUndefinedProperties: true, preferRest: true });
     } catch {}
     return db;
 }
