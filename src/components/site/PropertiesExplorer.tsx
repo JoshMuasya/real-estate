@@ -7,6 +7,7 @@ import { SlidersHorizontal } from "lucide-react";
 import { PropertyCard } from "./PropertyCard";
 import { Reveal } from "./Reveal";
 import { fieldClass } from "./ui";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { PropertiesExplorerProps, TransactionType } from "@/lib/types";
 import { amenityOptions, locations, propertyTypes } from "@/lib/data/properties";
@@ -33,6 +34,11 @@ export function PropertiesExplorer({
     const [amenities, setAmenities] = useState<string[]>([]);
     const [sort, setSort] = useState<Sort>("newest");
     const [visible, setVisible] = useState(PAGE_SIZE);
+    const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+    const activeFilterCount =
+        [location, type, !lockedTransaction && transaction, maxPrice, beds, baths].filter(Boolean)
+            .length + amenities.length;
 
     const results = useMemo(() => {
         const normalizedQuery = query.trim().toLowerCase();
@@ -167,10 +173,164 @@ export function PropertiesExplorer({
         setVisible(PAGE_SIZE);
     }
 
+    const filterFields = (
+        <div className="mt-6 space-y-5">
+            {/* Search */}
+            <input
+                className={fieldClass}
+                placeholder="Search by name or area"
+                value={query}
+                onChange={(event) => updateQuery(event.target.value)}
+                aria-label="Search properties"
+            />
+
+            {/* Location */}
+            <select
+                className={fieldClass}
+                value={location}
+                onChange={(event) => updateLocation(event.target.value)}
+                aria-label="Location"
+            >
+                <option value="">All locations</option>
+
+                {locations.map((locationOption) => (
+                    <option key={locationOption} value={locationOption}>
+                        {locationOption}
+                    </option>
+                ))}
+            </select>
+
+            {/* Property Type */}
+            <select
+                className={fieldClass}
+                value={type}
+                onChange={(event) => updateType(event.target.value)}
+                aria-label="Property type"
+            >
+                <option value="">All property types</option>
+
+                {propertyTypes.map((propertyType) => (
+                    <option key={propertyType} value={propertyType}>
+                        {propertyType}
+                    </option>
+                ))}
+            </select>
+
+            {/* Transaction */}
+            {!lockedTransaction && (
+                <div className="grid grid-cols-3 gap-2">
+                    {(
+                        [
+                            { label: "All", value: "" },
+                            { label: "Buy", value: "sale" },
+                            { label: "Rent", value: "rent" },
+                        ] as const
+                    ).map((option) => {
+                        const selected = transaction === option.value;
+
+                        return (
+                            <button
+                                key={option.label}
+                                type="button"
+                                onClick={() => updateTransaction(option.value)}
+                                aria-pressed={selected}
+                                className={cn(
+                                    "px-2 py-3 text-xs font-medium uppercase tracking-[0.12em] transition-colors",
+                                    selected
+                                        ? "border border-primary bg-primary text-primary-foreground"
+                                        : "border border-border bg-background text-muted-foreground hover:border-primary hover:text-primary",
+                                )}
+                            >
+                                {option.label}
+                            </button>
+                        );
+                    })}
+                </div>
+            )}
+
+            {/* Maximum Price */}
+            <select
+                className={fieldClass}
+                value={maxPrice}
+                onChange={(event) => updateMaxPrice(event.target.value)}
+                aria-label="Maximum price"
+            >
+                <option value="">Any price</option>
+                <option value="500000">Up to KES 500,000</option>
+                <option value="50000000">Up to KES 50M</option>
+                <option value="100000000">Up to KES 100M</option>
+                <option value="200000000">Up to KES 200M</option>
+            </select>
+
+            {/* Bedrooms / Bathrooms */}
+            <div className="grid grid-cols-2 gap-3">
+                <select
+                    className={fieldClass}
+                    value={beds}
+                    onChange={(event) => updateBeds(event.target.value)}
+                    aria-label="Minimum bedrooms"
+                >
+                    <option value="">Beds</option>
+
+                    {[1, 2, 3, 4, 5].map((number) => (
+                        <option key={number} value={number}>
+                            {number}+
+                        </option>
+                    ))}
+                </select>
+
+                <select
+                    className={fieldClass}
+                    value={baths}
+                    onChange={(event) => updateBaths(event.target.value)}
+                    aria-label="Minimum bathrooms"
+                >
+                    <option value="">Baths</option>
+
+                    {[1, 2, 3, 4, 5].map((number) => (
+                        <option key={number} value={number}>
+                            {number}+
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {/* Amenities */}
+            <div>
+                <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                    Amenities
+                </p>
+
+                <div className="flex flex-wrap gap-2">
+                    {amenityOptions.map((amenity) => {
+                        const selected = amenities.includes(amenity);
+
+                        return (
+                            <button
+                                key={amenity}
+                                type="button"
+                                onClick={() => toggleAmenity(amenity)}
+                                aria-pressed={selected}
+                                className={cn(
+                                    "border px-3 py-2 text-xs transition-colors",
+                                    selected
+                                        ? "border-brand text-brand"
+                                        : "border-border text-muted-foreground hover:border-primary hover:text-primary",
+                                )}
+                            >
+                                {amenity}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <div className="grid gap-12 lg:grid-cols-[19rem_1fr]">
-            {/* Filters */}
-            <aside className="lg:sticky lg:top-28 lg:self-start">
+            {/* Filters — desktop */}
+            <aside className="hidden lg:block lg:sticky lg:top-28 lg:self-start">
                 <div className="flex items-center gap-3 border-b border-border pb-4">
                     <SlidersHorizontal
                         className="h-4 w-4 text-primary"
@@ -191,161 +351,63 @@ export function PropertiesExplorer({
                     </button>
                 </div>
 
-                <div className="mt-6 space-y-5">
-                    {/* Search */}
-                    <input
-                        className={fieldClass}
-                        placeholder="Search by name or area"
-                        value={query}
-                        onChange={(event) => updateQuery(event.target.value)}
-                        aria-label="Search properties"
-                    />
-
-                    {/* Location */}
-                    <select
-                        className={fieldClass}
-                        value={location}
-                        onChange={(event) => updateLocation(event.target.value)}
-                        aria-label="Location"
-                    >
-                        <option value="">All locations</option>
-
-                        {locations.map((locationOption) => (
-                            <option key={locationOption} value={locationOption}>
-                                {locationOption}
-                            </option>
-                        ))}
-                    </select>
-
-                    {/* Property Type */}
-                    <select
-                        className={fieldClass}
-                        value={type}
-                        onChange={(event) => updateType(event.target.value)}
-                        aria-label="Property type"
-                    >
-                        <option value="">All property types</option>
-
-                        {propertyTypes.map((propertyType) => (
-                            <option key={propertyType} value={propertyType}>
-                                {propertyType}
-                            </option>
-                        ))}
-                    </select>
-
-                    {/* Transaction */}
-                    {!lockedTransaction && (
-                        <div className="grid grid-cols-3 gap-2">
-                            {(
-                                [
-                                    { label: "All", value: "" },
-                                    { label: "Buy", value: "sale" },
-                                    { label: "Rent", value: "rent" },
-                                ] as const
-                            ).map((option) => {
-                                const selected = transaction === option.value;
-
-                                return (
-                                    <button
-                                        key={option.label}
-                                        type="button"
-                                        onClick={() => updateTransaction(option.value)}
-                                        aria-pressed={selected}
-                                        className={cn(
-                                            "px-2 py-3 text-xs font-medium uppercase tracking-[0.12em] transition-colors",
-                                            selected
-                                                ? "border border-primary bg-primary text-primary-foreground"
-                                                : "border border-border bg-background text-muted-foreground hover:border-primary hover:text-primary",
-                                        )}
-                                    >
-                                        {option.label}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    )}
-
-                    {/* Maximum Price */}
-                    <select
-                        className={fieldClass}
-                        value={maxPrice}
-                        onChange={(event) => updateMaxPrice(event.target.value)}
-                        aria-label="Maximum price"
-                    >
-                        <option value="">Any price</option>
-                        <option value="500000">Up to KES 500,000</option>
-                        <option value="50000000">Up to KES 50M</option>
-                        <option value="100000000">Up to KES 100M</option>
-                        <option value="200000000">Up to KES 200M</option>
-                    </select>
-
-                    {/* Bedrooms / Bathrooms */}
-                    <div className="grid grid-cols-2 gap-3">
-                        <select
-                            className={fieldClass}
-                            value={beds}
-                            onChange={(event) => updateBeds(event.target.value)}
-                            aria-label="Minimum bedrooms"
-                        >
-                            <option value="">Beds</option>
-
-                            {[1, 2, 3, 4, 5].map((number) => (
-                                <option key={number} value={number}>
-                                    {number}+
-                                </option>
-                            ))}
-                        </select>
-
-                        <select
-                            className={fieldClass}
-                            value={baths}
-                            onChange={(event) => updateBaths(event.target.value)}
-                            aria-label="Minimum bathrooms"
-                        >
-                            <option value="">Baths</option>
-
-                            {[1, 2, 3, 4, 5].map((number) => (
-                                <option key={number} value={number}>
-                                    {number}+
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* Amenities */}
-                    <div>
-                        <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                            Amenities
-                        </p>
-
-                        <div className="flex flex-wrap gap-2">
-                            {amenityOptions.map((amenity) => {
-                                const selected = amenities.includes(amenity);
-
-                                return (
-                                    <button
-                                        key={amenity}
-                                        type="button"
-                                        onClick={() => toggleAmenity(amenity)}
-                                        aria-pressed={selected}
-                                        className={cn(
-                                            "border px-3 py-2 text-xs transition-colors",
-                                            selected
-                                                ? "border-brand text-brand"
-                                                : "border-border text-muted-foreground hover:border-primary hover:text-primary",
-                                        )}
-                                    >
-                                        {amenity}
-                                    </button>
-                                );
-                            })}
-                        </div>
-                    </div>
-                </div>
+                {filterFields}
             </aside>
+
+            {/* Filters — mobile sheet */}
+            <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
+                <SheetContent
+                    side="bottom"
+                    className="max-h-[85vh] w-full max-w-none gap-0 overflow-y-auto rounded-t-2xl border-t border-border bg-background p-6 pb-8 sm:max-w-none"
+                >
+                    <div className="flex items-center gap-3 border-b border-border pb-4">
+                        <SlidersHorizontal
+                            className="h-4 w-4 text-primary"
+                            strokeWidth={1.4}
+                            aria-hidden="true"
+                        />
+
+                        <SheetTitle className="text-xs font-medium uppercase tracking-[0.2em] text-foreground">
+                            Refine
+                        </SheetTitle>
+
+                        <button
+                            type="button"
+                            onClick={reset}
+                            className="ml-auto text-xs text-muted-foreground transition-colors hover:text-brand"
+                        >
+                            Clear all
+                        </button>
+                    </div>
+
+                    {filterFields}
+
+                    <button
+                        type="button"
+                        onClick={() => setMobileFiltersOpen(false)}
+                        className="mt-6 block w-full bg-primary py-4 text-center text-xs font-medium uppercase tracking-[0.15em] text-primary-foreground transition-colors hover:bg-primary/85"
+                    >
+                        Show {results.length} {results.length === 1 ? "property" : "properties"}
+                    </button>
+                </SheetContent>
+            </Sheet>
 
             {/* Results */}
             <div>
+                <button
+                    type="button"
+                    onClick={() => setMobileFiltersOpen(true)}
+                    className="mb-4 flex w-full items-center justify-center gap-2 border border-border px-4 py-3 text-xs font-medium uppercase tracking-[0.15em] text-foreground transition-colors hover:border-primary hover:text-primary lg:hidden"
+                >
+                    <SlidersHorizontal className="h-4 w-4 text-primary" strokeWidth={1.4} aria-hidden="true" />
+                    Filters
+                    {activeFilterCount > 0 && (
+                        <span className="ml-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[0.65rem] text-primary-foreground">
+                            {activeFilterCount}
+                        </span>
+                    )}
+                </button>
+
                 <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
                     <p className="text-sm text-muted-foreground">
                         <span className="text-foreground">

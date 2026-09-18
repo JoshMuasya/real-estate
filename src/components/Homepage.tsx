@@ -25,7 +25,7 @@ export default async function HomePage() {
     return (
         <>
             {/* Hero */}
-            <section className="relative flex min-h-screen items-end overflow-hidden">
+            <section className="relative flex min-h-[100svh] items-end overflow-hidden">
                 <Image
                     src="/hero.jpg"
                     alt="A contemporary luxury residence at dusk"
@@ -51,17 +51,17 @@ export default async function HomePage() {
                         exceptional spaces curated by Loymax Properties.
                     </p>
 
-                    <div className="mt-10 flex flex-wrap gap-4">
+                    <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
                         <Link
                             href="/properties"
-                            className="inline-flex items-center justify-center bg-primary px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-primary-foreground transition-colors hover:bg-primary/85"
+                            className="inline-flex w-full items-center justify-center bg-primary px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-primary-foreground transition-colors hover:bg-primary/85 sm:w-auto"
                         >
                             Explore Properties
                         </Link>
 
                         <Link
                             href="/contact"
-                            className="inline-flex items-center justify-center border border-primary-foreground/40 px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-primary-foreground transition-colors hover:border-brand hover:text-brand"
+                            className="inline-flex w-full items-center justify-center border border-primary-foreground/40 px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-primary-foreground transition-colors hover:border-brand hover:text-brand sm:w-auto"
                         >
                             Book a Consultation
                         </Link>
@@ -332,17 +332,17 @@ export default async function HomePage() {
                             its value.
                         </p>
 
-                        <div className="mt-10 flex flex-wrap gap-4">
+                        <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
                             <Link
                                 href="/sell"
-                                className="inline-flex items-center justify-center bg-primary px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-primary-foreground transition-colors hover:bg-primary/85"
+                                className="inline-flex w-full items-center justify-center bg-primary px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-primary-foreground transition-colors hover:bg-primary/85 sm:w-auto"
                             >
                                 Sell With Loymax
                             </Link>
 
                             <Link
                                 href="/sell#valuation"
-                                className="inline-flex items-center justify-center border border-brand px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-brand transition-colors hover:bg-brand hover:text-brand-foreground"
+                                className="inline-flex w-full items-center justify-center border border-brand px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-brand transition-colors hover:bg-brand hover:text-brand-foreground sm:w-auto"
                             >
                                 Request a Property Valuation
                             </Link>
@@ -497,17 +497,17 @@ export default async function HomePage() {
                         property opportunity, our team is ready to help.
                     </p>
 
-                    <div className="mt-10 flex flex-wrap gap-4">
+                    <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap">
                         <Link
                             href="/contact"
-                            className="inline-flex items-center justify-center bg-primary px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-primary-foreground transition-colors hover:bg-primary/85"
+                            className="inline-flex w-full items-center justify-center bg-primary px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-primary-foreground transition-colors hover:bg-primary/85 sm:w-auto"
                         >
                             Book a Consultation
                         </Link>
 
                         <Link
                             href="/properties"
-                            className="inline-flex items-center justify-center border border-brand px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-brand transition-colors hover:bg-brand hover:text-brand-foreground"
+                            className="inline-flex w-full items-center justify-center border border-brand px-10 py-4 text-xs font-medium uppercase tracking-[0.15em] text-brand transition-colors hover:bg-brand hover:text-brand-foreground sm:w-auto"
                         >
                             Explore Properties
                         </Link>
