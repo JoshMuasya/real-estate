@@ -95,7 +95,7 @@ export default async function DashboardOverviewPage() {
             <div className="rounded-xl border border-border bg-card">
                 <div className="flex items-center justify-between border-b border-border p-5">
                     <h2 className="font-serif text-xl text-foreground">Recent Properties</h2>
-                    <Button variant="link" size="sm" render={<Link href="/dashboard/properties" />}>
+                    <Button variant="link" size="sm" nativeButton={false} render={<Link href="/dashboard/properties" />}>
                         View All Properties →
                     </Button>
                 </div>
@@ -104,7 +104,7 @@ export default async function DashboardOverviewPage() {
                     <div className="flex flex-col items-center gap-3 p-12 text-center text-muted-foreground">
                         <Sparkles className="size-6" />
                         <p>No properties yet. Add your first listing to get started.</p>
-                        <Button render={<Link href="/dashboard/properties/new" />}>Add Property</Button>
+                        <Button nativeButton={false} render={<Link href="/dashboard/properties/new" />}>Add Property</Button>
                     </div>
                 ) : (
                     <ul className="divide-y divide-border">

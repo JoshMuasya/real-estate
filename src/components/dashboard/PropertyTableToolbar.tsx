@@ -127,7 +127,7 @@ export function PropertyTableToolbar() {
                 </SelectContent>
             </Select>
 
-            <Button render={<Link href="/dashboard/properties/new" />} className="sm:ml-auto">
+            <Button nativeButton={false} render={<Link href="/dashboard/properties/new" />} className="sm:ml-auto">
                 <Plus className="size-4" />
                 Add Property
             </Button>

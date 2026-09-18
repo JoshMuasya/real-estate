@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
+import type { DecodedIdToken } from "firebase-admin/auth";
 
 import { adminAuth } from "@/lib/firebase/admin";
 import type { SessionUser, UserRole } from "@/lib/types";
@@ -22,20 +23,27 @@ export const verifySession = cache(async (): Promise<SessionUser> => {
     const cookie = await getSessionCookie();
     if (!cookie) redirect("/login");
 
-    try {
-        const decoded = await adminAuth().verifySessionCookie(cookie, true);
-        const role = decoded.role;
-        if (!isUserRole(role)) redirect("/login");
+    let decoded: DecodedIdToken;
 
-        return {
-            uid: decoded.uid,
-            email: decoded.email ?? "",
-            role,
-            name: typeof decoded.name === "string" ? decoded.name : undefined,
-        };
-    } catch {
+    try {
+        decoded = await adminAuth().verifySessionCookie(cookie, true);
+    } catch (error) {
+        // Logged because an expired cookie and a misconfigured deployment (missing or
+        // malformed Firebase Admin credentials) are otherwise indistinguishable — both
+        // just bounce to /login with nothing to debug from.
+        console.error("[auth] Session verification failed:", error);
         redirect("/login");
     }
+
+    const role = decoded.role;
+    if (!isUserRole(role)) redirect("/login");
+
+    return {
+        uid: decoded.uid,
+        email: decoded.email ?? "",
+        role,
+        name: typeof decoded.name === "string" ? decoded.name : undefined,
+    };
 });
 
 /** Same verification as verifySession, but returns null instead of redirecting. Preview flow only. */

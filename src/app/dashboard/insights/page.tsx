@@ -76,7 +76,7 @@ export default async function InsightsPage({ searchParams }: PageProps) {
                                 Previous
                             </Button>
                         ) : (
-                            <Button variant="outline" size="sm" render={<Link href={pageHref(page - 1)} />}>
+                            <Button variant="outline" size="sm" nativeButton={false} render={<Link href={pageHref(page - 1)} />}>
                                 <ChevronLeft className="size-4" />
                                 Previous
                             </Button>
@@ -87,7 +87,7 @@ export default async function InsightsPage({ searchParams }: PageProps) {
                                 <ChevronRight className="size-4" />
                             </Button>
                         ) : (
-                            <Button variant="outline" size="sm" render={<Link href={pageHref(page + 1)} />}>
+                            <Button variant="outline" size="sm" nativeButton={false} render={<Link href={pageHref(page + 1)} />}>
                                 Next
                                 <ChevronRight className="size-4" />
                             </Button>

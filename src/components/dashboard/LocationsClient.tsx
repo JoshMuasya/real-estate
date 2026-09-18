@@ -25,7 +25,7 @@ export function LocationsClient({ items }: { items: FeaturedLocation[] }) {
     return (
         <div className="space-y-4">
             <div className="flex justify-end">
-                <Button render={<Link href="/dashboard/locations/new" />}>
+                <Button nativeButton={false} render={<Link href="/dashboard/locations/new" />}>
                     <Plus className="size-4" />
                     Add Location
                 </Button>

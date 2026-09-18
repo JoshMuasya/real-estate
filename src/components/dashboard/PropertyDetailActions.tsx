@@ -56,7 +56,7 @@ export function PropertyDetailActions({ property }: { property: Property }) {
                 {property.featured ? "Featured" : "Feature"}
             </Button>
 
-            <Button variant="outline" render={<Link href={`/dashboard/properties/${property.id}/edit`} />}>
+            <Button variant="outline" nativeButton={false} render={<Link href={`/dashboard/properties/${property.id}/edit`} />}>
                 <Pencil className="size-4" />
                 Edit
             </Button>

@@ -102,7 +102,7 @@ export function ArticleTableToolbar() {
                 </SelectContent>
             </Select>
 
-            <Button render={<Link href="/dashboard/insights/new" />} className="sm:ml-auto">
+            <Button nativeButton={false} render={<Link href="/dashboard/insights/new" />} className="sm:ml-auto">
                 <Plus className="size-4" />
                 Add Article
             </Button>
