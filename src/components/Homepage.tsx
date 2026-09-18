@@ -37,12 +37,14 @@ export default async function HomePage() {
 
                 <div className="absolute inset-0 bg-gradient-to-t from-foreground/85 via-foreground/45 to-foreground/40" />
 
-                <div className="relative mx-auto w-full max-w-[88rem] px-6 pb-24 lg:px-10 lg:pb-32">
+                {/* pt keeps the copy clear of the fixed header on short viewports, where the
+                    content outgrows the hero and stops being bottom-aligned. */}
+                <div className="relative mx-auto w-full max-w-[88rem] px-6 pb-24 pt-28 lg:px-10 lg:pb-32 lg:pt-32">
                     <p className="mb-0 text-xs font-medium uppercase tracking-[0.2em] text-primary-foreground/70">
                         Loymax Properties
                     </p>
 
-                    <h1 className="mt-6 max-w-4xl font-serif text-5xl leading-[0.95] tracking-tight text-primary-foreground md:text-7xl lg:text-8xl">
+                    <h1 className="mt-6 max-w-4xl font-serif text-4xl leading-[0.95] tracking-tight text-primary-foreground sm:text-5xl md:text-7xl lg:text-8xl">
                         Exceptional Properties. Thoughtful Investments.
                     </h1>
 
