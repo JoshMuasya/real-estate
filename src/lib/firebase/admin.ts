@@ -18,10 +18,14 @@ function getAdminApp(): App {
 }
 
 export function adminAuth() {
-    // Required lazily: firebase-admin/auth pulls in jwks-rsa -> jose (ESM-only),
-    // which throws ERR_REQUIRE_ESM on Node runtimes older than ~22.12. Deferring the
-    // require to here means routes that only touch Firestore (e.g. the public
-    // properties listing) never load that chain at all.
+    // Required lazily: firebase-admin/auth pulls in jwks-rsa -> jose, so routes that only
+    // touch Firestore (e.g. the public properties listing) never load that chain at all.
+    //
+    // jwks-rsa does require('jose'), and jose v6 dropped its CommonJS build, so that require
+    // needs a runtime with require(ESM) support. Our deploy target throws ERR_REQUIRE_ESM on
+    // it regardless of the Node version it reports, which takes down every dashboard route.
+    // package.json pins jose to v5 (which still ships CJS) to keep this loadable anywhere —
+    // don't lift that pin without checking this path still boots in production.
     const { getAuth } = require("firebase-admin/auth") as typeof import("firebase-admin/auth");
     return getAuth(getAdminApp());
 }
