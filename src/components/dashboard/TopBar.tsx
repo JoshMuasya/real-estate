@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
+    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
@@ -69,22 +70,26 @@ export function TopBar({ user, onMobileMenuClick }: { user: SessionUser; onMobil
                     </span>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuLabel className="font-normal">
-                        <p className="truncate text-sm font-medium text-foreground">{user.name || "Team member"}</p>
-                        <p className="truncate text-xs text-muted-foreground">{user.email}</p>
-                        <Badge variant="secondary" className="mt-2 capitalize">
-                            {user.role}
-                        </Badge>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem render={<Link href="/dashboard/settings" />}>
-                        <UserRound className="size-4" />
-                        My Profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem render={<Link href="/dashboard/settings" />}>
-                        <Settings className="size-4" />
-                        Settings
-                    </DropdownMenuItem>
+                    {/* Base UI requires GroupLabel to sit inside a Group — it labels the
+                        account actions below it. */}
+                    <DropdownMenuGroup>
+                        <DropdownMenuLabel className="font-normal">
+                            <p className="truncate text-sm font-medium text-foreground">{user.name || "Team member"}</p>
+                            <p className="truncate text-xs text-muted-foreground">{user.email}</p>
+                            <Badge variant="secondary" className="mt-2 capitalize">
+                                {user.role}
+                            </Badge>
+                        </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem render={<Link href="/dashboard/settings" />}>
+                            <UserRound className="size-4" />
+                            My Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem render={<Link href="/dashboard/settings" />}>
+                            <Settings className="size-4" />
+                            Settings
+                        </DropdownMenuItem>
+                    </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <form action={logoutAction}>
                         <DropdownMenuItem variant="destructive" render={<button type="submit" className="w-full" />}>
